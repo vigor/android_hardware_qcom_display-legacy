@@ -110,7 +110,7 @@ static int fb_setUpdateRect(struct framebuffer_device_t* dev,
 static int fb_post(struct framebuffer_device_t* dev, buffer_handle_t buffer)
 {
 #ifndef NO_HW_VSYNC
-    int e;
+    int e = 1;
 #endif
     if (private_handle_t::validate(buffer) < 0)
         return -EINVAL;
@@ -144,7 +144,11 @@ static int fb_post(struct framebuffer_device_t* dev, buffer_handle_t buffer)
             return -errno;
         }
 #ifndef NO_HW_VSYNC
-        ioctl(m->framebuffer->fd, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+        if(ioctl(m->framebuffer->fd, MSMFB_OVERLAY_VSYNC_CTRL, &e) == -1) {
+        ALOGE("MSMFB_OVERLAY_VSYNC_CTRL failed");
+        return -errno;
+        }
+
 #endif
         //Signals the composition thread to unblock and loop over if necessary
         pthread_mutex_lock(&m->fbPanLock);
@@ -203,8 +207,11 @@ int mapFrameBufferLocked(struct private_module_t* module)
     if (ioctl(fd, FBIOGET_VSCREENINFO, &info) == -1)
         return -errno;
 #ifndef NO_HW_VSYNC
-    int e;
-    ioctl(fd, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+    int e = 1;
+    if (ioctl(fd, MSMFB_OVERLAY_VSYNC_CTRL, &e) == -1) {
+        ALOGE("MSMFB_OVERLAY_VSYNC_CTRL failed");
+        return -errno;
+    }
 #endif
     info.reserved[0] = 0;
     info.reserved[1] = 0;
