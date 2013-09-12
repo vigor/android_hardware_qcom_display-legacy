@@ -48,8 +48,10 @@ enum {
     GRALLOC_USAGE_PRIVATE_IOMMU_HEAP      =       0x01000000,
     /* MM heap is a carveout heap for video, can be secured*/
     GRALLOC_USAGE_PRIVATE_MM_HEAP         =       0x02000000,
-    /* WRITEBACK heap is a carveout heap for writeback, can be secured*/
-    GRALLOC_USAGE_PRIVATE_WRITEBACK_HEAP  =       0x04000000,
+
+    /* Buffer content should be displayed on an primary display only */
+    GRALLOC_USAGE_PRIVATE_INTERNAL_ONLY   =       0x04000000,
+
     /* CAMERA heap is a carveout heap for camera, is not secured*/
     GRALLOC_USAGE_PRIVATE_CAMERA_HEAP     =       0x08000000,
 
@@ -90,6 +92,9 @@ enum {
      * but still need to be protected from screen captures
      */
     GRALLOC_USAGE_PRIVATE_CP_BUFFER       =       0x00080000,
+
+    /* WRITEBACK heap is a carveout heap for writeback, can be secured*/
+    GRALLOC_USAGE_PRIVATE_WRITEBACK_HEAP  =       0x00001000,
 };
 
 enum {
