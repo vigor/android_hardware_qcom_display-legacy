@@ -95,6 +95,9 @@ enum {
 
     /* WRITEBACK heap is a carveout heap for writeback, can be secured*/
     GRALLOC_USAGE_PRIVATE_WRITEBACK_HEAP  =       0x00001000,
+
+    /* This flag is used for SECURE display usecase */
+    GRALLOC_USAGE_PRIVATE_SECURE_DISPLAY  =       0x00002000,
 };
 
 enum {
