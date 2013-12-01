@@ -28,10 +28,6 @@ ifeq ($(TARGET_BOARD_PLATFORM), msm8960)
     common_flags += -DUSE_FENCE_SYNC
 endif
 
-ifeq ($(TARGET_USES_ION),true)
-    common_flags += -DUSE_ION
-endif
-
 ifeq ($(ARCH_ARM_HAVE_NEON),true)
     common_flags += -D__ARM_HAVE_NEON
 endif

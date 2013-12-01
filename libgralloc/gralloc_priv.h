@@ -106,9 +106,6 @@ enum {
 
 #define INTERLACE_MASK 0x80
 #define S3D_FORMAT_MASK 0xFF000
-#define DEVICE_PMEM "/dev/pmem"
-#define DEVICE_PMEM_ADSP "/dev/pmem_adsp"
-#define DEVICE_PMEM_SMIPOOL "/dev/pmem_smipool"
 /*****************************************************************************/
 enum {
     /* OEM specific HAL formats */
