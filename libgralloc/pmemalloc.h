@@ -49,8 +49,8 @@ class PmemAdspAlloc : public IMemAlloc  {
     virtual int unmap_buffer(void *base, size_t size,
                              int offset);
 
-    virtual int clean_buffer(void*base, size_t size,
-                             int offset, int fd, int op);
+    virtual int clean_buffer(void *base, size_t size,
+                             int offset, int fd);
 };
 
 }

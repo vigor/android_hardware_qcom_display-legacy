@@ -101,7 +101,7 @@ int PmemAdspAlloc::alloc_buffer(alloc_data& data)
         return err;
     }
     memset(base, 0, size);
-    clean_buffer((void*)((intptr_t) base + offset), size, offset, fd, 0);
+    clean_buffer((void*)((intptr_t) base + offset), size, offset, fd);
     data.base = base;
     data.offset = 0;
     data.fd = fd;
@@ -150,7 +150,7 @@ int PmemAdspAlloc::unmap_buffer(void *base, size_t size, int offset)
     return err;
 
 }
-int PmemAdspAlloc::clean_buffer(void *base, size_t size, int offset, int fd, int op)
+int PmemAdspAlloc::clean_buffer(void *base, size_t size, int offset, int fd)
 {
     return cleanPmem(base, size, offset, fd);
 }
