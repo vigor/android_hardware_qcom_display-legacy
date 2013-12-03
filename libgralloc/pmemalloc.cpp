@@ -39,6 +39,7 @@
 using namespace gralloc;
 
 #define PMEM_ADSP_DEVICE "/dev/pmem_adsp"
+#define PMEM_SMI_DEVICE "/dev/pmem_smipool"
 
 // Common functions between userspace
 // and kernel allocators
@@ -69,7 +70,7 @@ static int cleanPmem(void *base, size_t size, int offset, int fd) {
     return 0;
 }
 
-//-------------- PmemAdspAlloc-----------------------//
+//-------------- PmemAdspAlloc --------------//
 
 int PmemAdspAlloc::alloc_buffer(alloc_data& data)
 {
@@ -151,6 +152,92 @@ int PmemAdspAlloc::unmap_buffer(void *base, size_t size, int offset)
 
 }
 int PmemAdspAlloc::clean_buffer(void *base, size_t size, int offset, int fd)
+{
+    return cleanPmem(base, size, offset, fd);
+}
+
+//-------------- PmemSmiAlloc --------------//
+
+int PmemSmiAlloc::alloc_buffer(alloc_data& data)
+{
+    int err, offset = 0;
+    int openFlags = getOpenFlags(data.uncached);
+    int size = data.size;
+
+    int fd = open(PMEM_SMI_DEVICE, openFlags, 0);
+    if (fd < 0) {
+        err = -errno;
+        ALOGE("%s: Error opening %s", __FUNCTION__, PMEM_SMI_DEVICE);
+        return err;
+    }
+
+    if (data.align == 8192) {
+        // Tile format buffers need physical alignment to 8K
+        // Default page size does not need this ioctl
+        err = alignPmem(fd, size, 8192);
+        if (err < 0) {
+            ALOGE("alignPmem failed");
+        }
+    }
+    void* base = mmap(0, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    if (base == MAP_FAILED) {
+        err = -errno;
+        ALOGE("%s: failed to map pmem fd: %s", PMEM_SMI_DEVICE,
+              strerror(errno));
+        close(fd);
+        return err;
+    }
+    memset(base, 0, size);
+    clean_buffer((void*)((intptr_t) base + offset), size, offset, fd);
+    data.base = base;
+    data.offset = 0;
+    data.fd = fd;
+    ALOGV("%s: Allocated buffer base:%p size:%d fd:%d",
+          PMEM_SMI_DEVICE, base, size, fd);
+    return 0;
+
+}
+
+int PmemSmiAlloc::free_buffer(void* base, size_t size, int offset, int fd)
+{
+    ALOGV("%s: Freeing buffer base:%p size:%d fd:%d",
+          PMEM_SMI_DEVICE, base, size, fd);
+
+    int err =  unmap_buffer(base, size, offset);
+    close(fd);
+    return err;
+}
+
+int PmemSmiAlloc::map_buffer(void **pBase, size_t size, int offset, int fd)
+{
+    int err = 0;
+    void *base = mmap(0, size, PROT_READ| PROT_WRITE,
+                      MAP_SHARED, fd, 0);
+    *pBase = base;
+    if(base == MAP_FAILED) {
+        err = -errno;
+        ALOGE("%s: Failed to map memory in the client: %s",
+              PMEM_SMI_DEVICE, strerror(errno));
+    } else {
+        ALOGV("%s: Mapped buffer base:%p size:%d, fd:%d",
+              PMEM_SMI_DEVICE, base, size, fd);
+    }
+    return err;
+
+}
+
+int PmemSmiAlloc::unmap_buffer(void *base, size_t size, int offset)
+{
+    int err = 0;
+    if (munmap(base, size)) {
+        err = -errno;
+        ALOGW("%s: Error unmapping memory at %p: %s",
+              PMEM_SMI_DEVICE, base, strerror(err));
+    }
+    return err;
+
+}
+int PmemSmiAlloc::clean_buffer(void *base, size_t size, int offset, int fd)
 {
     return cleanPmem(base, size, offset, fd);
 }

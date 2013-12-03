@@ -53,6 +53,24 @@ class PmemAdspAlloc : public IMemAlloc  {
                              int offset, int fd);
 };
 
+class PmemSmiAlloc : public IMemAlloc  {
+
+    public:
+    virtual int alloc_buffer(alloc_data& data);
+
+    virtual int free_buffer(void *base, size_t size,
+                            int offset, int fd);
+
+    virtual int map_buffer(void **pBase, size_t size,
+                           int offset, int fd);
+
+    virtual int unmap_buffer(void *base, size_t size,
+                             int offset);
+
+    virtual int clean_buffer(void *base, size_t size,
+                             int offset, int fd);
+};
+
 }
 
 #endif /* GRALLOC_PMEMALLOC_H */

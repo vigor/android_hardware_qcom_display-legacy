@@ -38,6 +38,7 @@ class IMemAlloc;
 class IonAlloc;
 #ifdef USE_PMEM_ADSP
 class PmemAdspAlloc;
+class PmemSmiAlloc;
 #endif
 
 class IAllocController : public android::RefBase {
@@ -74,6 +75,7 @@ class IonController : public IAllocController {
     android::sp<IonAlloc> mIonAlloc;
 #ifdef USE_PMEM_ADSP
     android::sp<PmemAdspAlloc> mPmemAlloc;
+    android::sp<PmemSmiAlloc> mPmemSmipoolAlloc;
 #endif
 };
 
