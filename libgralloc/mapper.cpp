@@ -206,6 +206,7 @@ int terminateBuffer(gralloc_module_t const* module,
         // this buffer was mapped, unmap it now
         if (hnd->flags & (private_handle_t::PRIV_FLAGS_USES_PMEM |
                           private_handle_t::PRIV_FLAGS_USES_PMEM_ADSP |
+                          private_handle_t::PRIV_FLAGS_USES_PMEM_SMI |
                           private_handle_t::PRIV_FLAGS_USES_ASHMEM |
                           private_handle_t::PRIV_FLAGS_USES_ION)) {
             if (hnd->pid != getpid()) {

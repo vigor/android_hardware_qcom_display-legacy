@@ -263,7 +263,8 @@ static uint32 c2d_get_gpuaddr( struct private_handle_t *handle)
         return 0;
 
     if (handle->flags & (private_handle_t::PRIV_FLAGS_USES_PMEM |
-                         private_handle_t::PRIV_FLAGS_USES_PMEM_ADSP))
+                         private_handle_t::PRIV_FLAGS_USES_PMEM_ADSP |
+                         private_handle_t::PRIV_FLAGS_USES_PMEM_SMI))
         memtype = KGSL_USER_MEM_TYPE_PMEM;
     else if (handle->flags & private_handle_t::PRIV_FLAGS_USES_ASHMEM)
         memtype = KGSL_USER_MEM_TYPE_ASHMEM;
