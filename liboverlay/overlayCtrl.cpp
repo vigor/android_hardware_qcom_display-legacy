@@ -18,7 +18,7 @@
 #include <cutils/properties.h>
 #include "overlayCtrlData.h"
 #include "fb_priv.h"
-#include "gralloc_priv.h" //for interlace
+#include <gralloc_priv.h> //for interlace
 
 namespace overlay{
 

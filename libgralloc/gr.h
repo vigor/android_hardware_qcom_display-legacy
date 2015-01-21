@@ -20,7 +20,7 @@
 
 #include <stdint.h>
 #ifdef HAVE_ANDROID_OS      // just want PAGE_SIZE define
-# include <asm/page.h>
+//# include <asm/page.h>
 #else
 # include <sys/user.h>
 #endif

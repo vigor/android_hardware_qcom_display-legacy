@@ -1,10 +1,14 @@
 #Common headers
-common_includes := hardware/qcom/display-legacy/libgralloc
-common_includes += hardware/qcom/display-legacy/libgenlock
-common_includes += hardware/qcom/display-legacy/liboverlay
-common_includes += hardware/qcom/display-legacy/libcopybit
-common_includes += hardware/qcom/display-legacy/libqdutils
-common_includes += hardware/qcom/display-legacy/libhwcomposer
+common_includes := $(call project-path-for,qcom-display)/libgralloc
+common_includes += $(call project-path-for,qcom-display)/libgenlock
+common_includes += $(call project-path-for,qcom-display)/liboverlay
+common_includes += $(call project-path-for,qcom-display)/libcopybit
+common_includes += $(call project-path-for,qcom-display)/libqdutils
+common_includes += $(call project-path-for,qcom-display)/libhwcomposer
+
+common_includes += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+
+common_header_export_path := qcom/display
 
 ifeq ($(TARGET_USES_POST_PROCESSING),true)
     common_flags     += -DUSES_POST_PROCESSING
